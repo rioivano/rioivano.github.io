@@ -1,62 +1,295 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rio Ivano - Mini Portfolio</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    /* Tambahan jika kamu butuh font custom */
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-  </style>
-</head>
-<body class="bg-gray-900 text-white">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rio Ivano - Website</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+    <style>
+      /* Tambahan jika kamu butuh font custom */
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-900 text-white">
+    <!-- Header -->
+    <header class="text-center py-8 px-4">
+      <h1 class="text-3xl sm:text-4xl font-bold text-white">
+        <span class="text-blue-400">Rio Ivano</span>
+      </h1>
+      <p class="text-gray-300 mt-2 text-base sm:text-lg">
+        Programmer • Web Developer • Software Developer • IT Enthusiast
+      </p>
+    </header>
 
-  <!-- Header -->
-  <header class="text-center py-8 px-4">
-    <h1 class="text-3xl sm:text-4xl font-bold text-white">Halo, saya <span class="text-blue-400">Rio Ivano</span></h1>
-    <p class="text-gray-300 mt-2 text-base sm:text-lg">Web Developer • WordPress • JavaScript • Tailwind</p>
-  </header>
+    <!-- About Me -->
+    <section class="max-w-5xl mx-auto px-4 py-6">
+      <h2 class="text-2xl font-semibold text-blue-400 mb-4">About Me</h2>
+      <div
+        class="flex flex-col-reverse md:flex-row items-center md:items-start gap-6">
+        <!-- Text Section -->
+        <div class="md:w-2/3">
+          <p class="text-gray-300 leading-relaxed text-justify">
+            My name is Rio Ivano, born on January 2, 2001, in Jakarta, and
+            currently residing in South Tangerang. I am an IT Developer with 2
+            years of professional experience in programming and software
+            development, currently working at PT Bina Citra Teknologi.
+            Throughout my career, I have gained expertise in various programming
+            languages and contributed to developing efficient solutions for
+            diverse projects. I am highly motivated by a strong curiosity and
+            passion for technology, which drives me to continuously learn, grow,
+            and explore new opportunities to enhance my skills and knowledge.
+          </p>
 
-  <!-- Tentang Saya -->
-  <section class="max-w-3xl mx-auto px-4 py-6">
-    <h2 class="text-2xl font-semibold text-blue-400 mb-3">Tentang Saya</h2>
-    <p class="text-gray-300 leading-relaxed">
-      Saya adalah pengembang web yang fokus pada pembuatan situs modern dengan performa tinggi, menggunakan teknologi seperti WordPress, JavaScript, dan Tailwind CSS. Saya memiliki pengalaman membuat website profesional untuk berbagai klien dan perusahaan.
-    </p>
-  </section>
+          <!-- Download Button -->
+          <div class="mt-6">
+            <a
+              href="downloads/rio-ivano-cv-march-2025.pdf"
+              download
+              class="inline-flex items-center bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition">
+              <i class="bi bi-download mr-2 text-lg"></i>
+              Download Resume
+            </a>
+          </div>
+        </div>
 
-  <!-- Proyek -->
-  <section class="max-w-3xl mx-auto px-4 py-6">
-    <h2 class="text-2xl font-semibold text-blue-400 mb-4">Proyek</h2>
-    <div class="grid gap-4 sm:grid-cols-2">
-      <div class="bg-gray-800 rounded-xl p-4 shadow-md hover:ring-2 hover:ring-blue-500 transition">
-        <h3 class="text-lg font-bold text-white">Temenin.id</h3>
-        <p class="text-gray-400 text-sm">Website menggunakan React & Express.js</p>
+        <!-- Image Section -->
+        <div class="md:w-1/3 flex justify-center md:justify-end">
+          <img
+            src="images/profile.jpg"
+            alt="Rio Ivano"
+            class="rounded-md w-96 h-10w-96 object-cover shadow-lg" />
+        </div>
       </div>
-      <div class="bg-gray-800 rounded-xl p-4 shadow-md hover:ring-2 hover:ring-blue-500 transition">
-        <h3 class="text-lg font-bold text-white">PRPP Monitoring</h3>
-        <p class="text-gray-400 text-sm">Dashboard dengan Grafana & Google Analytics</p>
+    </section>
+
+    <!-- Skills -->
+    <section class="max-w-5xl mx-auto px-4 py-6">
+      <h2 class="text-2xl font-semibold text-blue-400 mb-4">Skills</h2>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <!-- Frontend Development -->
+        <div
+          class="bg-gray-800 rounded-xl p-4 shadow-md hover:ring-2 hover:ring-blue-500 transition">
+          <h3 class="text-lg font-bold text-white mb-2">
+            Frontend Development
+          </h3>
+          <p class="text-gray-300">
+            HTML, CSS, JavaScript, Tailwind CSS, React, Next.js
+          </p>
+        </div>
+
+        <!-- Backend Development -->
+        <div
+          class="bg-gray-800 rounded-xl p-4 shadow-md hover:ring-2 hover:ring-blue-500 transition">
+          <h3 class="text-lg font-bold text-white mb-2">Backend Development</h3>
+          <p class="text-gray-300">Express.js, CodeIgniter, .NET</p>
+        </div>
+
+        <!-- Databases & ORM -->
+        <div
+          class="bg-gray-800 rounded-xl p-4 shadow-md hover:ring-2 hover:ring-blue-500 transition">
+          <h3 class="text-lg font-bold text-white mb-2">Databases & ORM</h3>
+          <p class="text-gray-300">MySQL, MongoDB, Sequelize, Sequelize CLI</p>
+        </div>
+
+        <!-- Mobile & Desktop Development -->
+        <div
+          class="bg-gray-800 rounded-xl p-4 shadow-md hover:ring-2 hover:ring-blue-500 transition">
+          <h3 class="text-lg font-bold text-white mb-2">
+            Mobile & Desktop Development
+          </h3>
+          <p class="text-gray-300">Flutter, Unity</p>
+        </div>
+
+        <!-- CMS & Framework -->
+        <div
+          class="bg-gray-800 rounded-xl p-4 shadow-md hover:ring-2 hover:ring-blue-500 transition">
+          <h3 class="text-lg font-bold text-white mb-2">CMS & Framework</h3>
+          <p class="text-gray-300">WordPress, CodeIgniter</p>
+        </div>
+
+        <!-- DevOps & Tools -->
+        <div
+          class="bg-gray-800 rounded-xl p-4 shadow-md hover:ring-2 hover:ring-blue-500 transition">
+          <h3 class="text-lg font-bold text-white mb-2">
+            DevOps & Developer Tools
+          </h3>
+          <p class="text-gray-300">
+            Git, GitBash, Docker, Jenkins, Ubuntu, Postman
+          </p>
+        </div>
+
+        <!-- Cloud & Analytics -->
+        <div
+          class="bg-gray-800 rounded-xl p-4 shadow-md hover:ring-2 hover:ring-blue-500 transition">
+          <h3 class="text-lg font-bold text-white mb-2">Cloud & Analytics</h3>
+          <p class="text-gray-300">
+            Grafana, Google Analytics, Google Cloud Console, Google API
+          </p>
+        </div>
+
+        <!-- AI & Automation -->
+        <div
+          class="bg-gray-800 rounded-xl p-4 shadow-md hover:ring-2 hover:ring-blue-500 transition">
+          <h3 class="text-lg font-bold text-white mb-2">AI & Automation</h3>
+          <p class="text-gray-300">ChatGPT, Gemini AI, Perplexity AI</p>
+        </div>
+
+        <!-- Design & Multimedia -->
+        <div
+          class="bg-gray-800 rounded-xl p-4 shadow-md hover:ring-2 hover:ring-blue-500 transition">
+          <h3 class="text-lg font-bold text-white mb-2">Design & Multimedia</h3>
+          <p class="text-gray-300">Figma, Adobe Premiere</p>
+        </div>
+
+        <!-- Scripting & Shell -->
+        <div
+          class="bg-gray-800 rounded-xl p-4 shadow-md hover:ring-2 hover:ring-blue-500 transition">
+          <h3 class="text-lg font-bold text-white mb-2">Scripting & Shell</h3>
+          <p class="text-gray-300">PowerShell, GitBash</p>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Kontak -->
-  <section class="max-w-3xl mx-auto px-4 py-6">
-    <h2 class="text-2xl font-semibold text-blue-400 mb-4">Kontak</h2>
-    <ul class="space-y-2 text-gray-300">
-      <li>Email: <a href="mailto:rioivano5@gmail.com" class="text-blue-400 hover:underline">rioivano5@gmail.com</a></li>
-      <li>LinkedIn: <a href="https://linkedin.com/in/rioivano" class="text-blue-400 hover:underline">linkedin.com/in/rioivano</a></li>
-      <li>GitHub: <a href="https://github.com/rioivano" class="text-blue-400 hover:underline">github.com/rioivano</a></li>
-    </ul>
-  </section>
+    <!-- Educations -->
+    <section class="max-w-5xl mx-auto px-4 py-4">
+      <h2 class="text-2xl font-semibold text-blue-400 mb-4">Education</h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div
+          class="bg-gray-800 rounded-xl p-4 shadow-md hover:ring-2 hover:ring-blue-500 transition">
+          <h3 class="text-lg font-bold text-white">PAMULANG UNIVERSITY</h3>
+          <p class="text-gray-400 text-sm">Graduate Degree | 2018 - 2023</p>
+        </div>
+        <div
+          class="bg-gray-800 rounded-xl p-4 shadow-md hover:ring-2 hover:ring-blue-500 transition">
+          <h3 class="text-lg font-bold text-white">SMA N 2 KOTA SOLOK</h3>
+          <p class="text-gray-400 text-sm">Senior High School | 2015 - 2018</p>
+        </div>
+      </div>
+    </section>
 
-  <!-- Footer -->
-  <footer class="text-center py-6 text-sm text-gray-500">
-    &copy; 2025 Rio Ivano. Dibuat dengan ❤️.
-  </footer>
+    <!-- Works Experience -->
+    <section class="max-w-5xl mx-auto px-4 py-4">
+      <h2 class="text-2xl font-semibold text-blue-400 mb-4">
+        Works Experience
+      </h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div
+          class="bg-gray-800 rounded-xl p-4 shadow-md hover:ring-2 hover:ring-blue-500 transition">
+          <h3 class="text-lg font-bold text-white">
+            PT Bina Citra Teknologi (AnyBoard)
+          </h3>
+          <p class="text-gray-400 text-sm">Programmer | 2024 - now</p>
+        </div>
+        <div
+          class="bg-gray-800 rounded-xl p-4 shadow-md hover:ring-2 hover:ring-blue-500 transition">
+          <h3 class="text-lg font-bold text-white">PT Jenaka Rumah Kreatif</h3>
+          <p class="text-gray-400 text-sm">Programmer | 2023 - now</p>
+        </div>
+        <div
+          class="bg-gray-800 rounded-xl p-4 shadow-md hover:ring-2 hover:ring-blue-500 transition">
+          <h3 class="text-lg font-bold text-white">PT Inara Solusi Unggul</h3>
+          <p class="text-gray-400 text-sm">IT Staff | 2022 - 2023</p>
+        </div>
+        <div
+          class="bg-gray-800 rounded-xl p-4 shadow-md hover:ring-2 hover:ring-blue-500 transition">
+          <h3 class="text-lg font-bold text-white">PT Melisa Yousuf Media</h3>
+          <p class="text-gray-400 text-sm">
+            Internship | March - November 2021
+          </p>
+        </div>
+      </div>
+    </section>
 
-</body>
+    <!-- Contacts -->
+    <section class="max-w-5xl mx-auto px-4 py-6">
+      <h2 class="text-2xl font-semibold text-blue-400 pb-1">Contacts</h2>
+      <p class="text-base text-gray-400 mb-4">
+        I'm always open to exciting collaborations, freelance projects, or
+        full-time opportunities. Feel free to get in touch through any of the
+        platforms below.
+      </p>
+      <ul class="space-y-4 text-gray-300">
+        <!-- Email -->
+        <li class="flex items-center">
+          <div class="bg-white rounded-md py-1 px-2 mr-3">
+            <i class="bi bi-envelope-fill text-[#D44638] text-lg"></i>
+          </div>
+          <a
+            href="mailto:rioivano5@gmail.com"
+            class="text-white hover:underline"
+            >rioivano5@gmail.com</a
+          >
+        </li>
+        <!-- LinkedIn -->
+        <li class="flex items-center">
+          <div class="bg-white rounded-md py-1 px-2 mr-3">
+            <i class="bi bi-linkedin text-[#0A66C2] text-lg"></i>
+          </div>
+          <a
+            href="https://linkedin.com/in/rioivano"
+            class="text-white hover:underline"
+            target="_blank"
+            >linkedin.com/in/rioivano</a
+          >
+        </li>
+        <!-- GitHub -->
+        <li class="flex items-center">
+          <div class="bg-white rounded-md py-1 px-2 mr-3">
+            <i class="bi bi-github text-[#181717] text-lg"></i>
+          </div>
+          <a
+            href="https://github.com/rioivano"
+            class="text-white hover:underline"
+            target="_blank"
+            >github.com/rioivano</a
+          >
+        </li>
+      </ul>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center py-6 text-sm text-gray-500">
+      &copy; 2025 Rio Ivano | rioivano.github.io
+    </footer>
+
+    <!-- Floating WhatsApp Button -->
+    <a
+      href="https://wa.me/628161114275"
+      target="_blank"
+      class="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white rounded-2xl p-3 shadow-lg z-50 transition">
+      <i class="bi bi-whatsapp text-3xl"></i>
+    </a>
+
+    <!-- Background Music Audio -->
+    <audio id="bg-music" autoplay loop>
+      <source src="audios/audio2_23am.mp3" type="audio/mpeg" />
+      Your browser does not support the audio element.
+    </audio>
+
+    <!-- Mute Button Floating -->
+    <button
+      id="toggle-mute"
+      class="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full shadow-lg transition"
+      title="Toggle Music">
+      <i class="bi bi-volume-up-fill text-xl"></i>
+    </button>
+
+    <script>
+      const audio = document.getElementById("bg-music");
+      const toggleBtn = document.getElementById("toggle-mute");
+      const icon = toggleBtn.querySelector("i");
+
+      toggleBtn.addEventListener("click", () => {
+        audio.muted = !audio.muted;
+        icon.className = audio.muted
+          ? "bi bi-volume-mute-fill text-xl"
+          : "bi bi-volume-up-fill text-xl";
+      });
+    </script>
+  </body>
 </html>
