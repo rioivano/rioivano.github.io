@@ -19,21 +19,29 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: 'npm'
+          cache: 'npm' # Mengaktifkan cache agar build selanjutnya lebih cepat
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
+
       - name: Install dependencies
-        run: npm install
+        # Menggunakan 'npm ci' agar versi library sama persis dengan di laptop Anda
+        run: npm ci 
+
       - name: Build with Next.js
-        run: npx next build
+        # Menjalankan build standar (tanpa turbo) agar stabil di server
+        run: npm run build
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./out # Output folder dari Next.js export
+          # Next.js 'output: export' akan menghasilkan folder 'out'
+          path: ./out 
 
   deploy:
     environment:
