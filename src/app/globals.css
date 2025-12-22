@@ -1,26 +1,26 @@
+/* 1. Baris paling atas harus import URL luar */
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css");
+
+/* 2. Baru kemudian import Tailwind */
 @import "tailwindcss";
 
+/* 3. Custom CSS Anda */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  scroll-behavior: smooth;
+  --background: #0a0a0a;
+  --foreground: #ededed;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #111827; /* bg-gray-900 sesuai style Rio */
+  color: white;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+}
+
+/* Glow Effect Custom yang Rio buat di HTML lama */
+@layer components {
+  .glow-hover {
+    @apply transition-all duration-300 hover:shadow-[0_0_15px_3px_rgba(59,130,246,0.6)] hover:ring-2 hover:ring-blue-500;
+  }
 }
