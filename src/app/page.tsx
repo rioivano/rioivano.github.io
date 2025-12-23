@@ -83,7 +83,7 @@ export default function Home() {
 
       {/* SKILLS SECTION */}
       <section id="skills" className="max-w-5xl mx-auto px-4 py-16">
-        <h2 className="text-3xl font-bold text-blue-400 mb-8 border-l-4 border-blue-500 pl-4">Technical Knowledge</h2>
+        <h2 className="text-3xl font-bold text-blue-400 mb-8 border-l-4 border-blue-500 pl-4">Technical Skills</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {RESUME_DATA.skills.map((skill, index) => (
             <div key={index} data-aos="fade-up" data-aos-delay={index * 100} 

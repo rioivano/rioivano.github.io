@@ -26,7 +26,7 @@ export const RESUME_DATA = {
     },
     { 
       title: "Databases & Storage", 
-      items: "MySQL, MongoDB, PostgreSQL, Sequelize ORM, Redis." 
+      items: "MySQL, MongoDB, PostgreSQL, Sequelize ORM, Sequelize CLI, Redis." 
     },
     { 
       title: "AI & Future Tech", 
@@ -34,11 +34,11 @@ export const RESUME_DATA = {
     },
     { 
       title: "DevOps & Cloud", 
-      items: "Docker, Jenkins (CI/CD), Git/GitHub, Ubuntu Server, Google Cloud Console, Google APIs, Grafana Monitoring." 
+      items: "Docker, Jenkins (CI/CD), Git/GitHub, Ubuntu Server, Google Cloud Console, Google APIs, Grafana Monitoring, Swagger API, Postman API." 
     },
     { 
       title: "Design & Tools", 
-      items: "Figma (UI/UX), Postman, Adobe Premiere (Technical Documentation Video), Canva." 
+      items: "Figma (UI/UX), Adobe Premiere (Technical Documentation Video), Adobe Illustrator, Adobe XD, Canva." 
     }
   ],
 
@@ -51,8 +51,8 @@ export const RESUME_DATA = {
     },
     { 
       company: "PT Jenaka Rumah Kreatif", 
-      role: "Lead Programmer", 
-      period: "Jun 2023 - Jul 2025", // Mengikuti data HTML Anda
+      role: "Programmer", 
+      period: "Jun 2023 - Jul 2025",
       description: "Successfully led the development of multiple web projects, focusing on scalable architecture and seamless third-party integrations."
     },
     { 
