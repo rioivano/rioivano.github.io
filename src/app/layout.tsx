@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "rioivano - profile website",
-    description: "Software Engineer specializing in Next.js, Laravel, and Flutter.",
+    description: "",
     url: "https://rioivano.github.io",
     siteName: "Rio Ivano Portfolio",
     images: [

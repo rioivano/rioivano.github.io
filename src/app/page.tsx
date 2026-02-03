@@ -64,10 +64,10 @@ export default function Home() {
           <div className="md:w-2/3">
             <p className="text-gray-300 leading-relaxed text-lg text-justify">{RESUME_DATA.about}</p>
             <div className="mt-10 flex flex-wrap gap-4">
-               <a href="/downloads/cv.pdf" className="bg-blue-600 hover:bg-blue-700 px-8 py-3 rounded-xl flex items-center gap-3 transition-all hover:scale-105 shadow-lg shadow-blue-500/20">
+               <a href="/downloads/rioivano-cv-feb-2026-eng.pdf" className="bg-blue-600 hover:bg-blue-700 px-8 py-3 rounded-xl flex items-center gap-3 transition-all hover:scale-105 shadow-lg shadow-blue-500/20">
                   <i className="bi bi-download text-lg"></i> Download Resume
                </a>
-               <a href="/downloads/portfolio.pdf" className="bg-orange-600 hover:bg-orange-700 px-8 py-3 rounded-xl flex items-center gap-3 transition-all hover:scale-105 shadow-lg shadow-orange-500/20">
+               <a href="/downloads/rioivano-portfolio-2025.pdf" className="bg-orange-600 hover:bg-orange-700 px-8 py-3 rounded-xl flex items-center gap-3 transition-all hover:scale-105 shadow-lg shadow-orange-500/20">
                   <i className="bi bi-box-seam text-lg"></i> View Portfolio
                </a>
             </div>
