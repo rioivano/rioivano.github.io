@@ -67,7 +67,7 @@ export default function Home() {
                <a href="/downloads/rioivano-cv-feb-2026-eng.pdf" className="bg-blue-600 hover:bg-blue-700 px-8 py-3 rounded-xl flex items-center gap-3 transition-all hover:scale-105 shadow-lg shadow-blue-500/20">
                   <i className="bi bi-download text-lg"></i> Download Resume
                </a>
-               <a href="/downloads/rioivano-portfolio-2025.pdf" className="bg-orange-600 hover:bg-orange-700 px-8 py-3 rounded-xl flex items-center gap-3 transition-all hover:scale-105 shadow-lg shadow-orange-500/20">
+               <a href="/downloads/rioivano-portfolio-2026.pdf" className="bg-orange-600 hover:bg-orange-700 px-8 py-3 rounded-xl flex items-center gap-3 transition-all hover:scale-105 shadow-lg shadow-orange-500/20">
                   <i className="bi bi-box-seam text-lg"></i> View Portfolio
                </a>
             </div>
