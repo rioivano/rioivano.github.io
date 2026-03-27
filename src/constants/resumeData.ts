@@ -28,9 +28,9 @@ export const RESUME_DATA = {
       title: "Databases & Storage", 
       items: "MySQL, MongoDB, PostgreSQL, Sequelize ORM, Sequelize CLI, Redis." 
     },
-    { 
-      title: "AI & Future Tech", 
-      items: "AI-Assisted Development (Gemini/GPT/Perplexity), Prompt Engineering for Developers, AI Agent Integration, Automation Workflows." 
+    {
+      title: "AI & Future Tech",
+      items: "AI-Assisted Development (Claude AI/Gemini/GPT/Perplexity), Prompt Engineering for Developers, AI Agent Integration, Automation Workflows."
     },
     { 
       title: "DevOps & Cloud", 

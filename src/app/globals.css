@@ -4,23 +4,254 @@
 /* 2. Baru kemudian import Tailwind */
 @import "tailwindcss";
 
-/* 3. Custom CSS Anda */
+/* 3. Custom CSS */
 :root {
   scroll-behavior: smooth;
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --background: #080808;
+  --foreground: #f5f5f5;
+  --accent: #3b82f6;
+  --border: #1e1e1e;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
-  background-color: #111827; /* bg-gray-900 sesuai style Rio */
-  color: white;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #080808;
+  color: #f5f5f5;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif, "Apple Color Emoji";
   margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
-/* Glow Effect Custom yang Rio buat di HTML lama */
+/* ── NAME TEXT ──────────────────────────────────────────── */
+.name-text {
+  color: #ffffff;
+  text-shadow: 0 0 60px rgba(255, 255, 255, 0.07), 0 0 120px rgba(59, 130, 246, 0.05);
+  animation: nameReveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes nameReveal {
+  from { opacity: 0; transform: translateY(24px); filter: blur(10px); }
+  to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
+}
+
+/* ── TYPEWRITER CURSOR ──────────────────────────────────── */
+.typewriter-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background-color: #3b82f6;
+  margin-left: 3px;
+  vertical-align: middle;
+  animation: cursorBlink 1.1s step-end infinite;
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* ── AMBIENT GLOW ───────────────────────────────────────── */
+.ambient-glow {
+  animation: ambientDrift 10s ease-in-out infinite;
+}
+
+@keyframes ambientDrift {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+  33%       { transform: translate(8%, -6%) scale(1.08); opacity: 0.9; }
+  66%       { transform: translate(-6%, 8%) scale(0.94); opacity: 0.5; }
+}
+
+/* ── DIVIDER PULSE ──────────────────────────────────────── */
+.divider-pulse {
+  animation: dividerPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes dividerPulse {
+  0%, 100% { opacity: 0.3; transform: scaleY(1); }
+  50%       { opacity: 0.9; transform: scaleY(1.3); }
+}
+
+/* ── DOT GRID (hero & global bg) ───────────────────────── */
+.hero-grid {
+  background-image: radial-gradient(circle, rgba(59, 130, 246, 0.13) 1px, transparent 1px);
+  background-size: 52px 52px;
+  animation: gridDrift 28s linear infinite;
+}
+
+.page-grid {
+  background-image: radial-gradient(circle, rgba(59, 130, 246, 0.07) 1px, transparent 1px);
+  background-size: 52px 52px;
+  animation: gridDrift 28s linear infinite;
+}
+
+@keyframes gridDrift {
+  0%   { background-position: 0 0; }
+  100% { background-position: 52px 52px; }
+}
+
+/* ── SCAN BEAMS ─────────────────────────────────────────── */
+
+/* Hero-local scan */
+.scan-line {
+  pointer-events: none;
+  position: absolute;
+  left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(59, 130, 246, 0.25) 15%,
+    rgba(125, 211, 252, 0.55) 50%,
+    rgba(59, 130, 246, 0.25) 85%,
+    transparent 100%
+  );
+  filter: blur(0.6px);
+  animation: scanDown 8s linear infinite;
+}
+
+@keyframes scanDown {
+  0%   { top: 0%;   opacity: 0; }
+  4%   { opacity: 1; }
+  96%  { opacity: 0.7; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* Full-page slow scan (fixed, traverses viewport) */
+.page-scan-beam {
+  pointer-events: none;
+  position: fixed;
+  left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(59, 130, 246, 0.07) 20%,
+    rgba(125, 211, 252, 0.16) 50%,
+    rgba(59, 130, 246, 0.07) 80%,
+    transparent 100%
+  );
+  filter: blur(1px);
+  animation: pageBeamDown 16s linear infinite;
+}
+
+@keyframes pageBeamDown {
+  0%   { top: -2px;   opacity: 0; }
+  2%   { opacity: 1; }
+  98%  { opacity: 0.6; }
+  100% { top: 100vh; opacity: 0; }
+}
+
+/* ── HUD CORNER BRACKETS ────────────────────────────────── */
+.hud-tl { border-top: 1px solid rgba(59,130,246,0.55); border-left: 1px solid rgba(59,130,246,0.55); }
+.hud-tr { border-top: 1px solid rgba(59,130,246,0.55); border-right: 1px solid rgba(59,130,246,0.55); }
+.hud-bl { border-bottom: 1px solid rgba(59,130,246,0.55); border-left: 1px solid rgba(59,130,246,0.55); }
+.hud-br { border-bottom: 1px solid rgba(59,130,246,0.55); border-right: 1px solid rgba(59,130,246,0.55); }
+
+/* Smaller variant for cards/sections */
+.hud-sm-tl { border-top: 1px solid rgba(59,130,246,0.3); border-left: 1px solid rgba(59,130,246,0.3); }
+.hud-sm-tr { border-top: 1px solid rgba(59,130,246,0.3); border-right: 1px solid rgba(59,130,246,0.3); }
+.hud-sm-bl { border-bottom: 1px solid rgba(59,130,246,0.3); border-left: 1px solid rgba(59,130,246,0.3); }
+.hud-sm-br { border-bottom: 1px solid rgba(59,130,246,0.3); border-right: 1px solid rgba(59,130,246,0.3); }
+
+/* ── FLOATING MICRO-PARTICLES ───────────────────────────── */
+@keyframes floatA {
+  0%, 100% { transform: translate(0, 0) scale(1);        opacity: 0.25; }
+  33%       { transform: translate(8px, -18px) scale(1.5); opacity: 0.65; }
+  66%       { transform: translate(-6px, 9px) scale(0.7);  opacity: 0.2; }
+}
+
+@keyframes floatB {
+  0%, 100% { transform: translate(0, 0) scale(1);          opacity: 0.2; }
+  40%       { transform: translate(-12px, -22px) scale(1.6); opacity: 0.5; }
+  70%       { transform: translate(10px, 8px) scale(0.75);   opacity: 0.15; }
+}
+
+@keyframes floatC {
+  0%, 100% { transform: translate(0, 0) scale(1);         opacity: 0.3; }
+  50%       { transform: translate(6px, -26px) scale(1.7); opacity: 0.6; }
+}
+
+/* ── DATA READOUT TEXT ──────────────────────────────────── */
+.data-readout {
+  font-family: 'Courier New', monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: rgba(59, 130, 246, 0.38);
+  user-select: none;
+  animation: dataFlicker 5s ease-in-out infinite;
+}
+
+@keyframes dataFlicker {
+  0%, 94%, 100% { opacity: 1; }
+  95%           { opacity: 0.25; }
+  96.5%         { opacity: 1; }
+  98%           { opacity: 0.4; }
+}
+
+/* ── NAV LOGO ───────────────────────────────────────────── */
+.nav-logo-text {
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.2em;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+/* ── BACKDROP BLUR FALLBACK ─────────────────────────────── */
+@supports not (backdrop-filter: blur(12px)) {
+  .nav-blur {
+    background-color: rgba(8, 8, 8, 0.98) !important;
+  }
+}
+
+/* ── SCROLLBAR ──────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #080808; }
+::-webkit-scrollbar-thumb { background: #1e3a5f; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #2563eb; }
+
+/* ── COMPONENTS ─────────────────────────────────────────── */
 @layer components {
   .glow-hover {
-    @apply transition-all duration-300 hover:shadow-[0_0_15px_3px_rgba(59,130,246,0.6)] hover:ring-2 hover:ring-blue-500;
+    @apply transition-all duration-300 hover:shadow-[0_0_20px_2px_rgba(59,130,246,0.3)] hover:ring-1 hover:ring-blue-500/50;
   }
+
+  .section-heading {
+    @apply text-2xl sm:text-3xl font-bold text-white mb-8 border-l-4 border-blue-500 pl-4 relative;
+  }
+
+  /* Timeline dots with pulsing glow */
+  .timeline-dot-blue {
+    @apply absolute w-2.5 h-2.5 bg-blue-500 rounded-full -left-[5px] top-2;
+    animation: timelinePulseBlue 2.8s ease-in-out infinite;
+  }
+
+  .timeline-dot-cyan {
+    @apply absolute w-2.5 h-2.5 bg-cyan-400 rounded-full -left-[5px] top-2;
+    animation: timelinePulseCyan 2.8s ease-in-out infinite 0.7s;
+  }
+}
+
+@keyframes timelinePulseBlue {
+  0%, 100% { box-shadow: 0 0 0 3px #080808, 0 0 6px rgba(59,130,246,0.3); }
+  50%       { box-shadow: 0 0 0 3px #080808, 0 0 18px rgba(59,130,246,0.75); }
+}
+
+@keyframes timelinePulseCyan {
+  0%, 100% { box-shadow: 0 0 0 3px #080808, 0 0 6px rgba(6,182,212,0.3); }
+  50%       { box-shadow: 0 0 0 3px #080808, 0 0 18px rgba(6,182,212,0.75); }
 }

@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-// 1. Definisikan Metadata (Judul & SEO)
 export const metadata: Metadata = {
-  title: "rioivano - profile website",
-  description: "Portfolio of Rio Ivano, a Software Engineer and AI Implementation Specialist based in Jakarta.",
+  title: "Rio Ivano — Software Engineer",
+  description:
+    "Portfolio of Rio Ivano, a Software Engineer and AI Implementation Specialist based in South Tangerang, Indonesia.",
   icons: {
     icon: "/favicon.svg",
   },
   openGraph: {
-    title: "rioivano - profile website",
-    description: "",
+    title: "Rio Ivano — Software Engineer",
+    description:
+      "Portfolio of Rio Ivano, a Software Engineer and AI Implementation Specialist based in South Tangerang, Indonesia.",
     url: "https://rioivano.github.io",
     siteName: "Rio Ivano Portfolio",
     images: [
@@ -25,7 +26,6 @@ export const metadata: Metadata = {
   },
 };
 
-// 2. Wajib ada Default Export Komponen Layout
 export default function RootLayout({
   children,
 }: {
@@ -33,8 +33,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id" className="scroll-smooth">
-      <body className="antialiased bg-gray-900 text-white">
-        {/* Children adalah isi dari page.tsx Anda */}
+      <body className="antialiased bg-[#080808] text-white">
         {children}
       </body>
     </html>
