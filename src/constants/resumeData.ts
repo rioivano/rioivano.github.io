@@ -1,6 +1,6 @@
 export const RESUME_DATA = {
   name: "Rio Ivano",
-  role: "Programmer • Web Developer • Software Developer • IT Enthusiast",
+  role: "Programmer • Web Developer • Software Engineer • IT Enthusiast",
   about: `My name is Rio Ivano, a software engineer with over 4+ years of professional experience in building scalable web, mobile, and desktop applications. Currently driving innovation at PT Bina Citra Teknologi, I specialize in transforming complex business requirements into efficient digital solutions. I am highly passionate about the intersection of software engineering and Artificial Intelligence, constantly exploring new ways to leverage AI to accelerate development cycles and deliver smarter products.`,
   
   contact: {
