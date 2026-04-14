@@ -3,7 +3,10 @@
     "allow": [
       "Bash(find /d/github/rioivano.github.io/src -type f -name *.tsx -o -name *.ts -o -name *.json)",
       "Bash(npx tsc:*)",
-      "Bash(rtk tsc:*)"
+      "Bash(rtk tsc:*)",
+      "Bash(rtk git:*)",
+      "Bash(git:*)",
+      "Bash(rtk init:*)"
     ]
   }
 }

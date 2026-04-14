@@ -7,17 +7,33 @@ import { RESUME_DATA } from "@/constants/resumeData";
 import type { Lang } from "@/constants/resumeData";
 
 // Particle config — defined outside component to avoid re-creation
+// Fixed-positioned so they appear across the entire page
 const PARTICLES = [
-  { anim: "floatA", delay: "0s",   dur: "5.2s", top: "18%", left: "11%" },
-  { anim: "floatB", delay: "1.3s", dur: "7.1s", top: "68%", left: "6%" },
-  { anim: "floatC", delay: "2.6s", dur: "6.0s", top: "28%", left: "88%" },
-  { anim: "floatA", delay: "0.7s", dur: "8.4s", top: "78%", left: "85%" },
-  { anim: "floatB", delay: "3.2s", dur: "5.5s", top: "8%",  left: "47%" },
-  { anim: "floatC", delay: "1.9s", dur: "9.0s", top: "88%", left: "52%" },
-  { anim: "floatA", delay: "4.1s", dur: "6.3s", top: "50%", left: "2%" },
-  { anim: "floatB", delay: "2.4s", dur: "7.5s", top: "42%", left: "95%" },
-  { anim: "floatC", delay: "0.4s", dur: "5.8s", top: "93%", left: "22%" },
-  { anim: "floatA", delay: "3.7s", dur: "6.9s", top: "5%",  left: "75%" },
+  { anim: "floatA", delay: "0s",   dur: "5.2s", top: "8%",  left: "11%", sz: 3 },
+  { anim: "floatB", delay: "1.3s", dur: "7.1s", top: "22%", left: "6%",  sz: 2 },
+  { anim: "floatC", delay: "2.6s", dur: "6.0s", top: "15%", left: "88%", sz: 2 },
+  { anim: "floatA", delay: "0.7s", dur: "8.4s", top: "38%", left: "85%", sz: 3 },
+  { anim: "floatB", delay: "3.2s", dur: "5.5s", top: "5%",  left: "47%", sz: 2 },
+  { anim: "floatC", delay: "1.9s", dur: "9.0s", top: "55%", left: "52%", sz: 2 },
+  { anim: "floatA", delay: "4.1s", dur: "6.3s", top: "48%", left: "2%",  sz: 3 },
+  { anim: "floatB", delay: "2.4s", dur: "7.5s", top: "62%", left: "95%", sz: 2 },
+  { anim: "floatC", delay: "0.4s", dur: "5.8s", top: "78%", left: "22%", sz: 2 },
+  { anim: "floatA", delay: "3.7s", dur: "6.9s", top: "12%", left: "75%", sz: 3 },
+  { anim: "floatB", delay: "0.9s", dur: "6.7s", top: "32%", left: "33%", sz: 2 },
+  { anim: "floatC", delay: "2.1s", dur: "8.0s", top: "70%", left: "68%", sz: 3 },
+  { anim: "floatA", delay: "4.5s", dur: "5.4s", top: "85%", left: "14%", sz: 2 },
+  { anim: "floatB", delay: "1.6s", dur: "7.8s", top: "91%", left: "80%", sz: 2 },
+  { anim: "floatC", delay: "3.4s", dur: "6.2s", top: "44%", left: "58%", sz: 3 },
+  { anim: "floatA", delay: "0.3s", dur: "9.1s", top: "25%", left: "42%", sz: 2 },
+  { anim: "floatB", delay: "5.0s", dur: "5.9s", top: "60%", left: "8%",  sz: 2 },
+  { anim: "floatC", delay: "1.1s", dur: "7.3s", top: "18%", left: "62%", sz: 3 },
+  { anim: "floatA", delay: "3.9s", dur: "6.6s", top: "73%", left: "38%", sz: 2 },
+  { anim: "floatB", delay: "2.8s", dur: "8.8s", top: "96%", left: "55%", sz: 2 },
+  { anim: "floatC", delay: "4.7s", dur: "5.7s", top: "82%", left: "91%", sz: 3 },
+  { anim: "floatA", delay: "0.6s", dur: "7.9s", top: "52%", left: "25%", sz: 2 },
+  { anim: "floatB", delay: "3.1s", dur: "6.4s", top: "35%", left: "72%", sz: 2 },
+  { anim: "floatC", delay: "1.8s", dur: "8.5s", top: "67%", left: "48%", sz: 3 },
+  { anim: "floatA", delay: "4.3s", dur: "5.6s", top: "89%", left: "31%", sz: 2 },
 ] as const;
 
 export default function Home() {
@@ -199,6 +215,18 @@ export default function Home() {
           className="absolute inset-0"
           style={{ background: "radial-gradient(ellipse 120% 35% at 50% -2%, rgba(59,130,246,0.05) 0%, transparent 65%)" }}
         />
+        {/* Floating micro-particles — visible across entire page */}
+        {PARTICLES.map((p, i) => (
+          <div
+            key={i}
+            className="absolute rounded-full bg-blue-400"
+            style={{
+              top: p.top, left: p.left,
+              width: p.sz, height: p.sz,
+              animation: `${p.anim} ${p.dur} ${p.delay} ease-in-out infinite`,
+            }}
+          />
+        ))}
       </div>
 
       {/* ── NAVIGATION (fixed floating) ──────────────────────── */}
@@ -413,18 +441,6 @@ export default function Home() {
           <div className="data-readout absolute top-7.5 right-18 sm:top-10.5 sm:right-21 hidden sm:block text-right">v2026.03</div>
           <div className="data-readout absolute bottom-7.5 left-18 sm:bottom-10.5 sm:left-21 hidden sm:block">PORT.FOLIO</div>
           <div className="data-readout absolute bottom-7.5 right-18 sm:bottom-10.5 sm:right-21 hidden sm:block text-right">RIO.IVANO</div>
-          {PARTICLES.map((p, i) => (
-            <div
-              key={i}
-              className="absolute rounded-full bg-blue-400"
-              style={{
-                top: p.top, left: p.left,
-                width: i % 3 === 0 ? 3 : 2,
-                height: i % 3 === 0 ? 3 : 2,
-                animation: `${p.anim} ${p.dur} ${p.delay} ease-in-out infinite`,
-              }}
-            />
-          ))}
           <div
             className="absolute left-0 right-0"
             style={{
