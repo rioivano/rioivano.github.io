@@ -3,8 +3,9 @@
 import { useEffect, useState, useMemo, useRef } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { RESUME_DATA } from "@/constants/resumeData";
 import type { Lang } from "@/constants/resumeData";
+import { RESUME_DATA_EN } from "@/constants/resumeDataEn";
+import { RESUME_DATA_ID } from "@/constants/resumeDataId";
 
 // Particle config — defined outside component to avoid re-creation
 // Fixed-positioned so they appear across the entire page
@@ -45,8 +46,7 @@ export default function Home() {
   const [displayedRole, setDisplayedRole] = useState("");
   const [typingDone, setTypingDone] = useState(false);
 
-  // Helper: get text in current language
-  const t = (text: { en: string; id: string }) => text[lang];
+  const data = lang === "en" ? RESUME_DATA_EN : RESUME_DATA_ID;
 
   // Load saved preferences on mount
   useEffect(() => {
@@ -78,7 +78,7 @@ export default function Home() {
 
   // Typing effect — re-runs when language changes
   useEffect(() => {
-    const role = RESUME_DATA.role[lang];
+    const role = data.role;
     let interval: ReturnType<typeof setInterval>;
     let i = 0;
     setDisplayedRole("");
@@ -458,7 +458,7 @@ export default function Home() {
           className="relative name-text font-extrabold mb-5 leading-none tracking-tight break-words w-full"
           style={{ fontSize: "clamp(2.2rem, 10vw, 6rem)" }}
         >
-          {RESUME_DATA.name}
+          {data.name}
         </h1>
         <p className={`relative hero-role ${th.heroRole} max-w-lg font-medium tracking-[0.18em] uppercase min-h-[1.5em] font-mono`}>
           {displayedRole}
@@ -490,7 +490,7 @@ export default function Home() {
         <div className="flex flex-col-reverse md:flex-row gap-10 lg:gap-16 items-center">
           <div className="w-full md:w-2/3">
             <p className={`${th.aboutText} leading-relaxed sm:leading-loose text-base sm:text-[17px] text-justify`}>
-              {t(RESUME_DATA.about)}
+              {data.about}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a
@@ -543,7 +543,7 @@ export default function Home() {
           {lang === "en" ? "Technical Skills" : "Keahlian Teknis"}
         </h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {RESUME_DATA.skills.map((skill, index) => (
+          {data.skills.map((skill, index) => (
             <div
               key={index}
               data-aos="fade-up"
@@ -558,7 +558,7 @@ export default function Home() {
               />
               <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-blue-500/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <h3 className={`relative font-semibold text-sm mb-2 transition-colors duration-200 ${th.skillTitle}`}>
-                {t(skill.title)}
+                {skill.title}
               </h3>
               <p className={`relative text-xs leading-relaxed ${th.skillItems}`}>{skill.items}</p>
             </div>
@@ -589,7 +589,7 @@ export default function Home() {
             {lang === "en" ? "Education" : "Pendidikan"}
           </h2>
           <div className="space-y-8">
-            {RESUME_DATA.education.map((edu, index) => (
+            {data.education.map((edu, index) => (
               <div
                 key={index}
                 className={`relative pl-6 border-l ${th.eduBorder}`}
@@ -598,7 +598,7 @@ export default function Home() {
               >
                 <div className="timeline-dot-blue" />
                 <h3 className={`font-bold text-sm sm:text-base leading-snug ${th.timelineText}`}>{edu.school}</h3>
-                <p className="text-blue-400 text-xs mt-1">{t(edu.degree)}</p>
+                <p className="text-blue-400 text-xs mt-1">{edu.degree}</p>
                 <p className="data-readout mt-1" style={{ animationDelay: `${index * 0.5}s` }}>{edu.period}</p>
               </div>
             ))}
@@ -611,7 +611,7 @@ export default function Home() {
             {lang === "en" ? "Experience" : "Pengalaman"}
           </h2>
           <div className="space-y-8">
-            {RESUME_DATA.experience.map((exp, index) => (
+            {data.experience.map((exp, index) => (
               <div
                 key={index}
                 className={`relative pl-6 border-l ${th.expBorder}`}
@@ -622,7 +622,7 @@ export default function Home() {
                 <h3 className={`font-bold text-sm sm:text-base leading-snug ${th.timelineText}`}>{exp.company}</h3>
                 <p className="text-cyan-400 text-xs mt-1">{exp.role}</p>
                 <p className="data-readout mt-1 mb-2" style={{ color: th.expPeriodColor, animationDelay: `${index * 0.4}s` }}>{exp.period}</p>
-                <p className={`text-xs leading-relaxed line-clamp-2 ${th.expDesc}`}>{t(exp.description)}</p>
+                <p className={`text-xs leading-relaxed line-clamp-2 ${th.expDesc}`}>{exp.description}</p>
               </div>
             ))}
           </div>
@@ -673,16 +673,16 @@ export default function Home() {
           </p>
           <div className="relative grid sm:grid-cols-2 md:grid-cols-3 gap-3">
             <a
-              href={`mailto:${RESUME_DATA.contact.email}`}
+              href={`mailto:${data.contact.email}`}
               className={`group flex items-center gap-3 ${th.contactItem} p-4 rounded-xl transition-all duration-200 hover:-translate-y-0.5`}
             >
               <i className="bi bi-envelope text-blue-400 text-lg flex-shrink-0" />
               <span className={`text-xs truncate transition-colors ${th.contactLink}`}>
-                {RESUME_DATA.contact.email}
+                {data.contact.email}
               </span>
             </a>
             <a
-              href={RESUME_DATA.contact.linkedin}
+              href={data.contact.linkedin}
               target="_blank"
               rel="noopener noreferrer"
               className={`group flex items-center gap-3 ${th.contactItem} p-4 rounded-xl transition-all duration-200 hover:-translate-y-0.5`}
@@ -693,7 +693,7 @@ export default function Home() {
               </span>
             </a>
             <a
-              href={RESUME_DATA.contact.github}
+              href={data.contact.github}
               target="_blank"
               rel="noopener noreferrer"
               className={`group flex items-center gap-3 ${th.contactGithub} p-4 rounded-xl transition-all duration-200 hover:-translate-y-0.5 sm:col-span-2 md:col-span-1`}
@@ -716,14 +716,14 @@ export default function Home() {
           />
         </div>
         <p className="data-readout text-[9px] sm:text-[10px] tracking-[0.25em] uppercase">
-          &copy; {new Date().getFullYear()} {RESUME_DATA.name} —{" "}
+          &copy; {new Date().getFullYear()} {data.name} —{" "}
           {lang === "en" ? "ALL SYSTEMS OPERATIONAL" : "SEMUA SISTEM BERJALAN"}
         </p>
       </footer>
 
       {/* ── FLOATING WHATSAPP ────────────────────────────────── */}
       <a
-        href={`https://wa.me/${RESUME_DATA.contact.whatsapp}`}
+        href={`https://wa.me/${data.contact.whatsapp}`}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Chat on WhatsApp"
