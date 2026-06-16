@@ -37,6 +37,254 @@ const PARTICLES = [
   { anim: "floatA", delay: "4.3s", dur: "5.6s", top: "89%", left: "31%", sz: 2 },
 ] as const;
 
+type ContribDay = { date: string; count: number; level: number };
+
+// Renders a GitHub-style contribution heatmap. Pulls real data from the public
+// jogruber API (CORS-enabled) and draws the calendar itself, themed to match
+// the site instead of relying on a flaky external image service.
+function GithubActivityCalendar({ username, isDark, lang }: { username: string; isDark: boolean; lang: Lang }) {
+  const currentYear = new Date().getFullYear();
+  const [minYear, setMinYear] = useState<number>(currentYear);
+  const [year, setYear] = useState<number>(currentYear);
+  const [days, setDays] = useState<ContribDay[] | null>(null);
+  const [total, setTotal] = useState<number | null>(null);
+  const [error, setError] = useState(false);
+
+  // Earliest selectable year = the account creation year.
+  useEffect(() => {
+    let active = true;
+    fetch(`https://api.github.com/users/${username}`)
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("user fetch failed"))))
+      .then((u: { created_at?: string }) => {
+        if (active && u.created_at) setMinYear(new Date(u.created_at).getFullYear());
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, [username]);
+
+  // Contributions for the selected calendar year (matches GitHub's per-year view).
+  useEffect(() => {
+    let active = true;
+    setDays(null);
+    setTotal(null);
+    setError(false);
+    fetch(`https://github-contributions-api.jogruber.de/v4/${username}?y=${year}`)
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("fetch failed"))))
+      .then((d: { contributions?: ContribDay[]; total?: Record<string, number> }) => {
+        if (!active) return;
+        const contribs = d.contributions ?? [];
+        setDays(contribs);
+        const t = d.total?.[String(year)];
+        setTotal(typeof t === "number" ? t : contribs.reduce((s, c) => s + c.count, 0));
+      })
+      .catch(() => active && setError(true));
+    return () => {
+      active = false;
+    };
+  }, [username, year]);
+
+  const levelColors = isDark
+    ? ["rgba(255,255,255,0.05)", "rgba(59,130,246,0.3)", "rgba(59,130,246,0.5)", "rgba(59,130,246,0.78)", "rgba(59,130,246,1)"]
+    : ["rgba(15,23,42,0.06)", "rgba(37,99,235,0.3)", "rgba(37,99,235,0.5)", "rgba(37,99,235,0.78)", "rgba(37,99,235,1)"];
+
+  // Pad the first column so weekdays line up like on GitHub.
+  const lead = days && days.length ? new Date(days[0].date).getDay() : 0;
+  const subtle = isDark ? "text-zinc-600" : "text-slate-400";
+  // Year tabs: current year down to the account creation year.
+  const years = Array.from({ length: Math.max(0, currentYear - minYear) + 1 }, (_, i) => currentYear - i);
+
+  const months = lang === "en"
+    ? ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    : ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+
+  // Flatten into cells (Sun→Sat order), padding the first partial week.
+  const cells: (ContribDay | null)[] = [];
+  if (days) {
+    for (let i = 0; i < lead; i++) cells.push(null);
+    cells.push(...days);
+  }
+  const weekCount = Math.ceil(cells.length / 7);
+
+  // Month label segments: which week-column each month starts at and how many it spans.
+  const monthSegments: { label: string; start: number; span: number; m: number }[] = [];
+  for (let wi = 0; wi < weekCount; wi++) {
+    const first = cells.slice(wi * 7, wi * 7 + 7).find((c): c is ContribDay => !!c);
+    if (!first) continue;
+    const m = new Date(first.date).getMonth();
+    const last = monthSegments[monthSegments.length - 1];
+    if (last && last.m === m) last.span++;
+    else monthSegments.push({ label: months[m], start: wi, span: 1, m });
+  }
+
+  return (
+    <div>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+        <p className={`text-sm ${isDark ? "text-zinc-400" : "text-slate-600"}`}>
+          {total !== null ? (
+            <>
+              <span className={`font-bold ${isDark ? "text-white" : "text-slate-900"}`}>{total}</span>{" "}
+              {lang === "en" ? `contributions in ${year}` : `kontribusi pada ${year}`}
+            </>
+          ) : error ? (
+            lang === "en" ? "Couldn't load contributions right now." : "Gagal memuat kontribusi saat ini."
+          ) : (
+            lang === "en" ? "Loading contributions…" : "Memuat kontribusi…"
+          )}
+        </p>
+        {/* Year selector — like GitHub's year tabs */}
+        <div className="flex flex-wrap gap-1.5">
+          {years.map((y) => (
+            <button
+              key={y}
+              onClick={() => setYear(y)}
+              className={`px-2.5 py-1 rounded-md text-xs font-mono font-bold tracking-wider transition-colors duration-200 ${
+                y === year
+                  ? "bg-blue-600 text-white"
+                  : isDark
+                    ? "text-zinc-500 hover:text-zinc-200 hover:bg-white/5 border border-[#1e1e1e]"
+                    : "text-slate-500 hover:text-slate-800 hover:bg-slate-100 border border-slate-200"
+              }`}
+            >
+              {y}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {days && (
+        <div className="overflow-x-auto pb-1">
+          {/* min-w keeps it readable on mobile (scrolls); on laptop it stretches to fill the card */}
+          <div className="min-w-[560px]">
+            {/* Month labels — each spans its own week-columns, so they never overlap */}
+            <div
+              className="grid gap-[3px] mb-1.5"
+              style={{ gridTemplateColumns: `repeat(${weekCount}, minmax(0, 1fr))` }}
+            >
+              {monthSegments.map((seg, i) => (
+                <div
+                  key={i}
+                  className={`text-[10px] font-mono whitespace-nowrap overflow-hidden ${subtle}`}
+                  style={{ gridColumn: `${seg.start + 1} / span ${seg.span}` }}
+                >
+                  {seg.label}
+                </div>
+              ))}
+            </div>
+            {/* Heatmap — one grid; tracks size the cells (no per-cell sizing → no overlap).
+                aspect-ratio keeps cells square as the grid stretches to fill width. */}
+            <div
+              className="grid gap-[3px]"
+              style={{
+                gridTemplateColumns: `repeat(${weekCount}, minmax(0, 1fr))`,
+                gridTemplateRows: "repeat(7, minmax(0, 1fr))",
+                gridAutoFlow: "column",
+                aspectRatio: `${weekCount} / 7`,
+              }}
+            >
+              {cells.map((d, i) => (
+                <div
+                  key={i}
+                  title={d ? `${d.count} ${lang === "en" ? "on" : "pada"} ${d.date}` : undefined}
+                  className="rounded-[2px]"
+                  style={{ backgroundColor: d ? (levelColors[d.level] ?? levelColors[0]) : "transparent" }}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Legend */}
+      {days && (
+        <div className={`flex items-center gap-1.5 mt-3 text-[10px] font-mono ${subtle}`}>
+          <span>{lang === "en" ? "Less" : "Sedikit"}</span>
+          {levelColors.map((c, i) => (
+            <span key={i} className="w-[11px] h-[11px] rounded-[2px]" style={{ backgroundColor: c }} />
+          ))}
+          <span>{lang === "en" ? "More" : "Banyak"}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Three headline GitHub stats pulled from the public REST API (no token).
+// "Repositories created" and "Active since" are exact; "Repos contributed to"
+// is approximated from recent public activity (full count needs an auth token).
+function GithubProfileStats({ username, isDark, lang }: { username: string; isDark: boolean; lang: Lang }) {
+  const [stats, setStats] = useState<{ repos: number; contributed: number; since: number } | null>(null);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    setStats(null);
+    setError(false);
+    (async () => {
+      try {
+        const userRes = await fetch(`https://api.github.com/users/${username}`);
+        if (!userRes.ok) throw new Error("user fetch failed");
+        const u = await userRes.json();
+
+        let contributed = 0;
+        try {
+          const evRes = await fetch(`https://api.github.com/users/${username}/events/public?per_page=100`);
+          if (evRes.ok) {
+            const events: { repo?: { name?: string } }[] = await evRes.json();
+            const repos = new Set<string>();
+            for (const e of events) {
+              const name = e?.repo?.name;
+              if (name && !name.startsWith(`${username}/`)) repos.add(name);
+            }
+            contributed = repos.size;
+          }
+        } catch {
+          /* keep contributed at 0 if events are unavailable */
+        }
+
+        if (!active) return;
+        setStats({
+          repos: u.public_repos ?? 0,
+          contributed,
+          since: new Date(u.created_at).getFullYear(),
+        });
+      } catch {
+        if (active) setError(true);
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, [username]);
+
+  const tile = isDark ? "bg-[#080808] border-[#1e1e1e]" : "bg-slate-50 border-slate-200";
+  const numCls = isDark ? "text-white" : "text-slate-900";
+  const labelCls = isDark ? "text-zinc-500" : "text-slate-500";
+
+  const items = [
+    { icon: "bi-journal-code",   value: stats?.repos,       label: lang === "en" ? "Repositories created"  : "Repositori dibuat" },
+    { icon: "bi-diagram-3",      value: stats?.contributed, label: lang === "en" ? "Repos contributed to"  : "Repositori kontribusi" },
+    { icon: "bi-calendar-check", value: stats?.since,       label: lang === "en" ? "Active since"          : "Aktif sejak" },
+  ];
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
+      {items.map((it, i) => (
+        <div key={i} className={`flex items-center gap-3 border rounded-xl p-4 ${tile}`}>
+          <i className={`bi ${it.icon} text-xl text-blue-400 flex-shrink-0`} />
+          <div className="min-w-0">
+            <div className={`text-xl font-bold leading-none ${numCls}`}>
+              {error ? "—" : it.value ?? "…"}
+            </div>
+            <div className={`text-[11px] mt-1 ${labelCls}`}>{it.label}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDark, setIsDark] = useState(true);
@@ -99,14 +347,52 @@ export default function Home() {
     };
   }, [lang]);
 
+  // Auto-play background music on load. Chrome forbids autoplay WITH sound
+  // until the visitor interacts, but allows MUTED autoplay — so we start the
+  // track muted (reels already spinning) and unmute on the first gesture.
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.volume = 0.4;
+    audio.muted = true;
+    audio.play().then(() => setIsPlaying(true)).catch(() => {});
+
+    const cleanup = () => {
+      window.removeEventListener("pointerdown", onGesture);
+      window.removeEventListener("keydown", onGesture);
+      window.removeEventListener("touchstart", onGesture);
+    };
+    function onGesture(e: Event) {
+      // Let the music button manage its own play/pause.
+      const target = e.target as HTMLElement | null;
+      if (target?.closest("[data-music-btn]")) return;
+      const a = audioRef.current;
+      if (!a) return;
+      a.muted = false;
+      a.volume = 0.4;
+      a.play().then(() => setIsPlaying(true)).catch(() => {});
+      cleanup();
+    }
+
+    window.addEventListener("pointerdown", onGesture);
+    window.addEventListener("keydown", onGesture);
+    window.addEventListener("touchstart", onGesture, { passive: true });
+
+    return cleanup;
+  }, []);
+
   // Audio toggle
   const toggleAudio = () => {
     const audio = audioRef.current;
     if (!audio) return;
-    if (isPlaying) {
+    const wasMuted = audio.muted;
+    if (isPlaying && !wasMuted) {
       audio.pause();
       setIsPlaying(false);
     } else {
+      // Either paused, or playing-but-muted from the autoplay phase → give sound.
+      audio.muted = false;
+      audio.volume = 0.4;
       audio.play().then(() => setIsPlaying(true)).catch(() => {});
     }
   };
@@ -117,6 +403,7 @@ export default function Home() {
     { label: lang === "en" ? "Skills"    : "Keahlian",  href: "skills" },
     { label: lang === "en" ? "Education" : "Pendidikan", href: "education" },
     { label: lang === "en" ? "Experience": "Pengalaman", href: "experience" },
+    { label: lang === "en" ? "Activity"  : "Aktivitas",  href: "activity" },
     { label: lang === "en" ? "Contact"   : "Kontak",    href: "contact" },
   ], [lang]);
 
@@ -203,6 +490,15 @@ export default function Home() {
     panelLabel:       "text-slate-400",
   }), [isDark]);
 
+
+  // GitHub activity widgets (rendered by external chart services). Colors are
+  // tuned per theme so the cards blend into the page background.
+  const ghUser = data.contact.github.split("/").filter(Boolean).pop() || "rioivano";
+  const ghColors = isDark
+    ? "title_color=3b82f6&text_color=a1a1aa&icon_color=06b6d4&bg_color=00000000&hide_border=true"
+    : "title_color=2563eb&text_color=475569&icon_color=0891b2&bg_color=00000000&hide_border=true";
+  const ghStats = `https://github-readme-stats.vercel.app/api?username=${ghUser}&show_icons=true&count_private=true&${ghColors}`;
+  const ghLangs = `https://github-readme-stats.vercel.app/api/top-langs/?username=${ghUser}&layout=compact&langs_count=8&${ghColors}`;
 
   return (
     <main className={`${th.main} min-h-screen selection:bg-blue-500/20 relative`}>
@@ -468,7 +764,7 @@ export default function Home() {
       </header>
 
       {/* ── ABOUT SECTION ────────────────────────────────────── */}
-      <section id="about" className="relative max-w-5xl mx-auto px-5 sm:px-8 py-16 sm:py-20" data-aos="fade-up">
+      <section id="about" className="relative max-w-5xl mx-auto px-5 sm:px-8 lg:px-12 py-16 sm:py-20 lg:py-24" data-aos="fade-up">
         <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
           <div
             className="absolute -right-20 sm:-right-10 top-0 rounded-full opacity-40"
@@ -511,7 +807,7 @@ export default function Home() {
             <div className="relative group">
               <div className="absolute -inset-0.5 bg-linear-to-br from-blue-600 to-cyan-500 rounded-2xl blur opacity-15 group-hover:opacity-40 transition duration-700" />
               <img
-                src="/images/profile.jpg"
+                src="/images/rioivano-photo.jpeg"
                 alt="Rio Ivano"
                 className={`relative rounded-2xl w-full h-auto object-cover border ${th.imgBorder}`}
                 loading="eager"
@@ -523,7 +819,7 @@ export default function Home() {
       </section>
 
       {/* ── SKILLS SECTION ───────────────────────────────────── */}
-      <section id="skills" className="relative max-w-5xl mx-auto px-5 sm:px-8 py-16 sm:py-20">
+      <section id="skills" className="relative max-w-5xl mx-auto px-5 sm:px-8 lg:px-12 py-16 sm:py-20 lg:py-24">
         <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
           <div
             className="absolute -left-16 top-1/2 -translate-y-1/2 rounded-full opacity-30"
@@ -567,7 +863,7 @@ export default function Home() {
       </section>
 
       {/* ── EDUCATION & EXPERIENCE ───────────────────────────── */}
-      <div className="relative max-w-5xl mx-auto px-5 sm:px-8 py-16 sm:py-20 grid md:grid-cols-2 gap-12 lg:gap-20">
+      <div className="relative max-w-5xl mx-auto px-5 sm:px-8 lg:px-12 py-16 sm:py-20 lg:py-24 grid md:grid-cols-2 gap-12 lg:gap-20">
         <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
           <div
             className="absolute right-1/3 top-1/2 -translate-y-1/2 rounded-full opacity-25"
@@ -629,8 +925,79 @@ export default function Home() {
         </section>
       </div>
 
+      {/* ── GITHUB ACTIVITY SECTION ──────────────────────────── */}
+      <section id="activity" className="relative max-w-5xl mx-auto px-5 sm:px-8 lg:px-12 py-16 sm:py-20 lg:py-24" data-aos="fade-up">
+        <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+          <div
+            className="absolute -left-16 top-1/3 rounded-full opacity-30"
+            style={{
+              width: "clamp(160px, 25vw, 320px)",
+              height: "clamp(160px, 25vw, 320px)",
+              background: "radial-gradient(circle, rgba(6,182,212,0.06) 0%, transparent 70%)",
+            }}
+          />
+          <div
+            className="absolute top-0 left-0 right-0 h-px"
+            style={{ background: "linear-gradient(90deg, transparent 0%, rgba(6,182,212,0.1) 40%, rgba(6,182,212,0.18) 50%, rgba(6,182,212,0.1) 60%, transparent 100%)" }}
+          />
+        </div>
+
+        <h2 className="section-heading">
+          {lang === "en" ? "GitHub Activity" : "Aktivitas GitHub"}
+        </h2>
+
+        {/* Contribution graph */}
+        <div className={`relative ${th.contactCard} rounded-2xl p-5 sm:p-6 md:p-8 overflow-hidden`}>
+          <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+            <div className="hud-sm-tl absolute w-5 h-5 top-3 left-3" />
+            <div className="hud-sm-br absolute w-5 h-5 bottom-3 right-3" />
+          </div>
+          <div className="relative flex items-center justify-between mb-5">
+            <p className={`text-xs font-mono tracking-[0.15em] uppercase ${th.contactSubtitle}`}>
+              @{ghUser}
+            </p>
+            <a
+              href={data.contact.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-xs font-medium text-cyan-400 hover:text-cyan-300 transition-colors"
+            >
+              <i className="bi bi-github" />
+              {lang === "en" ? "View Profile" : "Lihat Profil"}
+              <i className="bi bi-arrow-up-right text-[10px]" />
+            </a>
+          </div>
+          <GithubProfileStats username={ghUser} isDark={isDark} lang={lang} />
+          <div className="relative">
+            <GithubActivityCalendar username={ghUser} isDark={isDark} lang={lang} />
+          </div>
+        </div>
+
+        {/* Stats cards */}
+        <div className="grid md:grid-cols-2 gap-4 mt-4">
+          <div className={`relative ${th.contactCard} rounded-2xl p-4 sm:p-5 flex items-center justify-center overflow-hidden`}>
+            <img
+              src={ghStats}
+              alt={lang === "en" ? `${ghUser} GitHub stats` : `Statistik GitHub ${ghUser}`}
+              className="w-full max-w-[420px] h-auto"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <div className={`relative ${th.contactCard} rounded-2xl p-4 sm:p-5 flex items-center justify-center overflow-hidden`}>
+            <img
+              src={ghLangs}
+              alt={lang === "en" ? `${ghUser} most used languages` : `Bahasa paling sering dipakai ${ghUser}`}
+              className="w-full max-w-[420px] h-auto"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+        </div>
+      </section>
+
       {/* ── CONTACT SECTION ──────────────────────────────────── */}
-      <section id="contact" className="relative max-w-5xl mx-auto px-5 sm:px-8 py-16 sm:py-20" data-aos="fade-up">
+      <section id="contact" className="relative max-w-5xl mx-auto px-5 sm:px-8 lg:px-12 py-16 sm:py-20 lg:py-24" data-aos="fade-up">
         <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
           <div
             className="absolute top-0 left-0 right-0 h-px"
@@ -733,9 +1100,10 @@ export default function Home() {
       </a>
 
       {/* ── FLOATING CASSETTE PLAYER ─────────────────────────── */}
-      <audio ref={audioRef} src="/audios/dreaming.mp3" loop preload="none" />
+      <audio ref={audioRef} src="/audios/dreaming.mp3" loop preload="auto" />
       <button
         onClick={toggleAudio}
+        data-music-btn
         aria-label={isPlaying ? "Pause background music" : "Play background music"}
         className={`fixed bottom-6 left-6 sm:bottom-8 sm:left-8 px-3.5 py-2.5 rounded-2xl shadow-2xl z-50 transition-all duration-200 hover:scale-105 active:scale-95 flex flex-col items-center gap-1 ${
           isPlaying
