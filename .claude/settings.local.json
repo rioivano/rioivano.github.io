@@ -13,7 +13,10 @@
       "Bash(curl -s \"https://api.github.com/users/rioivano/events/public?per_page=100\")",
       "Bash(python -c \"import sys,json; e=json.load\\(sys.stdin\\); s=set\\(n for ev in e if \\(n:=ev.get\\('repo',{}\\).get\\('name'\\)\\) and not n.startswith\\('rioivano/'\\)\\); print\\('count:', len\\(s\\)\\)\")",
       "Bash(npx next *)",
-      "Bash(echo \"exit: $?\")"
+      "Bash(echo \"exit: $?\")",
+      "PowerShell(npm run *)",
+      "PowerShell(npx tsc --noEmit -p tsconfig.json 2>&1 | Select-Object -First 30)",
+      "PowerShell(npx tsc --noEmit -p tsconfig.json 2>&1 | Select-Object -First 20)"
     ]
   }
 }

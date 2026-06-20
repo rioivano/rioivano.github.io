@@ -27,7 +27,7 @@ export const RESUME_DATA_EN: ResumeData = {
 
   experience: [
     {
-      company: "PT Binacitra Teknologi",
+      company: "PT Bina Citra Teknologi",
       role: "Software Engineer",
       period: "May 2024 - Present",
       description: "Developing and maintaining enterprise-level applications, optimizing database performance, and implementing modern frontend frameworks to enhance user experience.",

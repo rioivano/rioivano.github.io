@@ -27,7 +27,7 @@ export const RESUME_DATA_ID: ResumeData = {
 
   experience: [
     {
-      company: "PT Binacitra Teknologi",
+      company: "PT Bina Citra Teknologi",
       role: "Software Engineer",
       period: "Mei 2024 - Sekarang",
       description: "Mengembangkan dan memelihara aplikasi tingkat enterprise, mengoptimalkan performa database, serta mengimplementasikan framework frontend modern untuk meningkatkan pengalaman pengguna.",

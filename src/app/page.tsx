@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo, useRef } from "react";
+import { useEffect, useState, useMemo, useRef, type ReactNode } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import type { Lang } from "@/constants/resumeData";
@@ -285,6 +285,95 @@ function GithubProfileStats({ username, isDark, lang }: { username: string; isDa
   );
 }
 
+// Reusable popup/modal. Closes on backdrop click or Escape, locks body scroll
+// while open, and matches the site's HUD aesthetic per theme.
+function Modal({
+  open,
+  onClose,
+  title,
+  subtitle,
+  isDark,
+  children,
+}: {
+  open: boolean;
+  onClose: () => void;
+  title: string;
+  subtitle?: string;
+  isDark: boolean;
+  children: ReactNode;
+}) {
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6"
+      role="dialog"
+      aria-modal="true"
+      aria-label={title}
+    >
+      {/* Backdrop */}
+      <div
+        className={`modal-overlay absolute inset-0 backdrop-blur-sm ${isDark ? "bg-black/70" : "bg-black/40"}`}
+        onClick={onClose}
+      />
+
+      {/* Panel */}
+      <div
+        className={`modal-panel relative w-full max-w-3xl max-h-[85vh] overflow-y-auto rounded-2xl border p-6 sm:p-8 shadow-2xl ${
+          isDark ? "bg-[#0a0a0a] border-[#1e1e1e] shadow-black/60" : "bg-white border-slate-200 shadow-slate-400/40"
+        }`}
+      >
+        {/* HUD corners */}
+        <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+          <div className="hud-tl absolute w-6 h-6 top-3 left-3" />
+          <div className="hud-tr absolute w-6 h-6 top-3 right-3" />
+          <div className="hud-bl absolute w-6 h-6 bottom-3 left-3" />
+          <div className="hud-br absolute w-6 h-6 bottom-3 right-3" />
+        </div>
+
+        {/* Header */}
+        <div className="relative flex items-start justify-between gap-4 mb-6">
+          <div>
+            <h2 className={`text-xl sm:text-2xl font-bold ${isDark ? "text-white" : "text-slate-900"}`}>{title}</h2>
+            {subtitle && (
+              <p className={`text-xs mt-1 font-mono tracking-[0.15em] uppercase ${isDark ? "text-zinc-600" : "text-slate-400"}`}>
+                {subtitle}
+              </p>
+            )}
+          </div>
+          <button
+            onClick={onClose}
+            aria-label="Close"
+            className={`flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-lg border transition-colors ${
+              isDark
+                ? "border-[#1e1e1e] text-zinc-400 hover:text-white hover:bg-white/5"
+                : "border-slate-200 text-slate-500 hover:text-slate-900 hover:bg-slate-100"
+            }`}
+          >
+            <i className="bi bi-x-lg text-sm" />
+          </button>
+        </div>
+
+        <div className="relative">{children}</div>
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDark, setIsDark] = useState(true);
@@ -293,6 +382,7 @@ export default function Home() {
   const [lang, setLang] = useState<Lang>("en");
   const [displayedRole, setDisplayedRole] = useState("");
   const [typingDone, setTypingDone] = useState(false);
+  const [activeModal, setActiveModal] = useState<null | "skills" | "career">(null);
 
   const data = lang === "en" ? RESUME_DATA_EN : RESUME_DATA_ID;
 
@@ -349,13 +439,14 @@ export default function Home() {
 
   // Auto-play background music on load. Chrome forbids autoplay WITH sound
   // until the visitor interacts, but allows MUTED autoplay — so we start the
-  // track muted (reels already spinning) and unmute on the first gesture.
+  // track muted and unmute on the first gesture. `isPlaying` stays false while
+  // muted so the "Click here to play" CTA reflects whether sound is audible.
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
     audio.volume = 0.4;
     audio.muted = true;
-    audio.play().then(() => setIsPlaying(true)).catch(() => {});
+    audio.play().catch(() => {});
 
     const cleanup = () => {
       window.removeEventListener("pointerdown", onGesture);
@@ -380,6 +471,17 @@ export default function Home() {
 
     return cleanup;
   }, []);
+
+  // Hero "Start" CTA — kicks off the soundtrack and slides into the About section.
+  const startExperience = () => {
+    const audio = audioRef.current;
+    if (audio) {
+      audio.muted = false;
+      audio.volume = 0.4;
+      audio.play().then(() => setIsPlaying(true)).catch(() => {});
+    }
+    document.getElementById("about")?.scrollIntoView({ behavior: "smooth" });
+  };
 
   // Audio toggle
   const toggleAudio = () => {
@@ -688,12 +790,9 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Spacer so content doesn't hide behind fixed nav */}
-      <div className="h-[72px]" />
-
-      {/* ── HERO SECTION ─────────────────────────────────────── */}
+      {/* ── HERO SECTION (fullscreen landing) ────────────────── */}
       <header
-        className="relative text-center px-5 py-24 sm:py-32 min-h-[90vh] flex flex-col justify-center items-center w-full overflow-hidden"
+        className="relative text-center px-5 py-24 sm:py-32 min-h-screen flex flex-col justify-center items-center w-full overflow-hidden"
         data-aos="fade-up"
       >
         <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
@@ -760,7 +859,25 @@ export default function Home() {
           {displayedRole}
           {!typingDone && <span className="typewriter-cursor" />}
         </p>
-        <div className="divider-pulse mt-14 w-px h-12 bg-linear-to-b from-blue-500/40 to-transparent mx-auto" />
+        {/* Start CTA — kicks off the soundtrack and scrolls into About */}
+        <button
+          onClick={startExperience}
+          data-music-btn
+          aria-label={lang === "en" ? "Start and play music" : "Mulai dan putar musik"}
+          className="relative mt-12 group inline-flex items-center gap-3 px-8 py-3.5 rounded-full border border-blue-500/40 bg-blue-500/10 hover:bg-blue-500/20 hover:border-blue-400/60 transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg shadow-blue-500/10"
+        >
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-60 animate-ping" />
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-400" />
+          </span>
+          <span className="text-xs font-mono uppercase tracking-[0.3em] text-blue-200">
+            {lang === "en" ? "Start" : "Mulai"}
+          </span>
+          <i className="bi bi-arrow-down text-blue-300/80 text-sm group-hover:translate-y-0.5 transition-transform duration-300" />
+        </button>
+
+        {/* Scroll indicator */}
+        <div className="divider-pulse mt-12 w-px h-12 bg-linear-to-b from-blue-500/40 to-transparent mx-auto" />
       </header>
 
       {/* ── ABOUT SECTION ────────────────────────────────────── */}
@@ -835,16 +952,24 @@ export default function Home() {
           />
         </div>
 
-        <h2 className="section-heading">
-          {lang === "en" ? "Technical Skills" : "Keahlian Teknis"}
-        </h2>
+        <button
+          type="button"
+          onClick={() => setActiveModal("skills")}
+          className="section-trigger group flex items-center gap-3 mb-8 text-left"
+        >
+          <h2 className="section-heading !mb-0">
+            {lang === "en" ? "Technical Skills" : "Keahlian Teknis"}
+          </h2>
+          <i className={`bi bi-arrows-fullscreen text-sm transition-colors ${isDark ? "text-zinc-600 group-hover:text-blue-400" : "text-slate-400 group-hover:text-blue-500"}`} />
+        </button>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {data.skills.map((skill, index) => (
             <div
               key={index}
               data-aos="fade-up"
               data-aos-delay={index * 60}
-              className={`group relative ${th.skillCard} p-5 rounded-xl transition-all duration-300 cursor-default overflow-hidden`}
+              onClick={() => setActiveModal("skills")}
+              className={`group relative ${th.skillCard} p-5 rounded-xl transition-all duration-300 cursor-pointer overflow-hidden`}
             >
               <div className="hud-sm-tl absolute w-4 h-4 top-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <div className="hud-sm-br absolute w-4 h-4 bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -881,14 +1006,22 @@ export default function Home() {
 
         {/* Education */}
         <section id="education" className="relative">
-          <h2 className="section-heading">
-            {lang === "en" ? "Education" : "Pendidikan"}
-          </h2>
+          <button
+            type="button"
+            onClick={() => setActiveModal("career")}
+            className="section-trigger group flex items-center gap-3 mb-8 text-left"
+          >
+            <h2 className="section-heading !mb-0">
+              {lang === "en" ? "Education" : "Pendidikan"}
+            </h2>
+            <i className={`bi bi-arrows-fullscreen text-sm transition-colors ${isDark ? "text-zinc-600 group-hover:text-blue-400" : "text-slate-400 group-hover:text-blue-500"}`} />
+          </button>
           <div className="space-y-8">
             {data.education.map((edu, index) => (
               <div
                 key={index}
-                className={`relative pl-6 border-l ${th.eduBorder}`}
+                onClick={() => setActiveModal("career")}
+                className={`relative pl-6 border-l cursor-pointer ${th.eduBorder}`}
                 data-aos="fade-left"
                 data-aos-delay={index * 100}
               >
@@ -903,14 +1036,22 @@ export default function Home() {
 
         {/* Experience */}
         <section id="experience" className="relative">
-          <h2 className="section-heading">
-            {lang === "en" ? "Experience" : "Pengalaman"}
-          </h2>
+          <button
+            type="button"
+            onClick={() => setActiveModal("career")}
+            className="section-trigger group flex items-center gap-3 mb-8 text-left"
+          >
+            <h2 className="section-heading !mb-0">
+              {lang === "en" ? "Experience" : "Pengalaman"}
+            </h2>
+            <i className={`bi bi-arrows-fullscreen text-sm transition-colors ${isDark ? "text-zinc-600 group-hover:text-blue-400" : "text-slate-400 group-hover:text-blue-500"}`} />
+          </button>
           <div className="space-y-8">
             {data.experience.map((exp, index) => (
               <div
                 key={index}
-                className={`relative pl-6 border-l ${th.expBorder}`}
+                onClick={() => setActiveModal("career")}
+                className={`relative pl-6 border-l cursor-pointer ${th.expBorder}`}
                 data-aos="fade-left"
                 data-aos-delay={index * 60}
               >
@@ -1168,6 +1309,80 @@ export default function Home() {
             : (lang === "en" ? "MUSIC" : "MUSIK")}
         </span>
       </button>
+
+      {/* ── SKILLS POPUP ─────────────────────────────────────── */}
+      <Modal
+        open={activeModal === "skills"}
+        onClose={() => setActiveModal(null)}
+        title={lang === "en" ? "Technical Skills" : "Keahlian Teknis"}
+        subtitle={`${data.skills.length} ${lang === "en" ? "areas" : "bidang"}`}
+        isDark={isDark}
+      >
+        <div className="grid sm:grid-cols-2 gap-4">
+          {data.skills.map((skill, index) => (
+            <div
+              key={index}
+              className={`group relative ${th.skillCard} p-5 rounded-xl transition-all duration-300 overflow-hidden`}
+            >
+              <div
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-xl"
+                style={{ background: th.skillCardGlow }}
+              />
+              <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-blue-500/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <h3 className={`relative font-semibold text-sm mb-2 transition-colors duration-200 ${th.skillTitle}`}>
+                {skill.title}
+              </h3>
+              <p className={`relative text-xs leading-relaxed ${th.skillItems}`}>{skill.items}</p>
+            </div>
+          ))}
+        </div>
+      </Modal>
+
+      {/* ── EDUCATION & EXPERIENCE POPUP ─────────────────────── */}
+      <Modal
+        open={activeModal === "career"}
+        onClose={() => setActiveModal(null)}
+        title={lang === "en" ? "Education & Experience" : "Pendidikan & Pengalaman"}
+        subtitle={lang === "en" ? "Timeline" : "Lini Masa"}
+        isDark={isDark}
+      >
+        <div className="grid md:grid-cols-2 gap-10">
+          {/* Education */}
+          <div>
+            <h3 className={`text-sm font-bold uppercase tracking-[0.15em] mb-5 ${isDark ? "text-blue-400" : "text-blue-600"}`}>
+              {lang === "en" ? "Education" : "Pendidikan"}
+            </h3>
+            <div className="space-y-7">
+              {data.education.map((edu, index) => (
+                <div key={index} className={`relative pl-6 border-l ${th.eduBorder}`}>
+                  <div className="timeline-dot-blue" />
+                  <h4 className={`font-bold text-sm leading-snug ${th.timelineText}`}>{edu.school}</h4>
+                  <p className="text-blue-400 text-xs mt-1">{edu.degree}</p>
+                  <p className="data-readout mt-1">{edu.period}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Experience */}
+          <div>
+            <h3 className={`text-sm font-bold uppercase tracking-[0.15em] mb-5 ${isDark ? "text-cyan-400" : "text-cyan-600"}`}>
+              {lang === "en" ? "Experience" : "Pengalaman"}
+            </h3>
+            <div className="space-y-7">
+              {data.experience.map((exp, index) => (
+                <div key={index} className={`relative pl-6 border-l ${th.expBorder}`}>
+                  <div className="timeline-dot-cyan" />
+                  <h4 className={`font-bold text-sm leading-snug ${th.timelineText}`}>{exp.company}</h4>
+                  <p className="text-cyan-400 text-xs mt-1">{exp.role}</p>
+                  <p className="data-readout mt-1 mb-2" style={{ color: th.expPeriodColor }}>{exp.period}</p>
+                  <p className={`text-xs leading-relaxed ${th.expDesc}`}>{exp.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </Modal>
     </main>
   );
 }
