@@ -7,6 +7,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://rioivano.web.id"),
   title: "Rio Ivano — Software Engineer",
   description:
     "Portfolio of Rio Ivano, a Software Engineer and AI Implementation Specialist based in South Tangerang, Indonesia.",
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
     title: "Rio Ivano — Software Engineer",
     description:
       "Portfolio of Rio Ivano, a Software Engineer and AI Implementation Specialist based in South Tangerang, Indonesia.",
-    url: "https://rioivano.github.io",
+    url: "https://rioivano.web.id",
     siteName: "Rio Ivano Portfolio",
     images: [
       {
