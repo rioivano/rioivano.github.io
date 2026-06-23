@@ -34,7 +34,7 @@ const PARTICLES = [
   { anim: "floatA", delay: "0.6s", dur: "7.9s", top: "52%", left: "25%", sz: 2 },
   { anim: "floatB", delay: "3.1s", dur: "6.4s", top: "35%", left: "72%", sz: 2 },
   { anim: "floatC", delay: "1.8s", dur: "8.5s", top: "67%", left: "48%", sz: 3 },
-  { anim: "floatA", delay: "4.3s", dur: "5.6s", top: "89%", left: "31%", sz: 2 },
+  { anim: "floatA", delay: "4.25s", dur: "5.6s", top: "89%", left: "31%", sz: 2 },
 ] as const;
 
 type ContribDay = { date: string; count: number; level: number };
