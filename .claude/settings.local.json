@@ -16,7 +16,9 @@
       "Bash(echo \"exit: $?\")",
       "PowerShell(npm run *)",
       "PowerShell(npx tsc --noEmit -p tsconfig.json 2>&1 | Select-Object -First 30)",
-      "PowerShell(npx tsc --noEmit -p tsconfig.json 2>&1 | Select-Object -First 20)"
+      "PowerShell(npx tsc --noEmit -p tsconfig.json 2>&1 | Select-Object -First 20)",
+      "PowerShell($tools = @\\(\"magick\",\"inkscape\",\"rsvg-convert\"\\); foreach \\($t in $tools\\) { $c = Get-Command $t -ErrorAction SilentlyContinue; if \\($c\\) { \"FOUND: $t -> $\\($c.Source\\)\" } else { \"missing: $t\" } }; \"node sharp:\"; node -e \"try{require.resolve\\('sharp'\\);console.log\\('sharp available'\\)}catch\\(e\\){console.log\\('no sharp'\\)}\" 2>$null)",
+      "Bash(node *)"
     ]
   }
 }
