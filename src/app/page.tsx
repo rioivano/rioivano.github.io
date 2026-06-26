@@ -1137,6 +1137,166 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── MY MASTERPIECE SECTION ───────────────────────────── */}
+      <section id="masterpiece" className="relative max-w-5xl mx-auto px-5 sm:px-8 lg:px-12 py-16 sm:py-20 lg:py-24" data-aos="fade-up">
+        <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+          <div
+            className="absolute -right-20 top-1/4 rounded-full opacity-40"
+            style={{
+              width: "clamp(160px, 25vw, 340px)",
+              height: "clamp(160px, 25vw, 340px)",
+              background: "radial-gradient(circle, rgba(139,92,246,0.07) 0%, transparent 70%)",
+            }}
+          />
+          <div
+            className="absolute top-0 left-0 right-0 h-px"
+            style={{ background: "linear-gradient(90deg, transparent 0%, rgba(139,92,246,0.14) 40%, rgba(45,212,191,0.2) 50%, rgba(139,92,246,0.14) 60%, transparent 100%)" }}
+          />
+        </div>
+
+        <div className="flex items-center gap-3 mb-3">
+          <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-violet-500/30 bg-violet-500/10 text-[10px] font-mono uppercase tracking-[0.2em] text-violet-400">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-70 animate-ping" />
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-violet-400" />
+            </span>
+            {lang === "en" ? "Built with AI" : "Dibuat dengan AI"}
+          </span>
+        </div>
+        <h2 className="section-heading">
+          {lang === "en" ? "My Masterpiece" : "Karya Terbaik Saya"}
+        </h2>
+        <p className={`text-sm sm:text-[15px] leading-relaxed mb-8 max-w-2xl ${th.aboutText}`}>
+          {lang === "en"
+            ? "Two mini-SaaS products I designed and built from scratch — not mockups, but working tools running right here on this static site, in English and Indonesian."
+            : "Dua produk mini-SaaS yang saya rancang dan bangun dari nol — bukan sekadar mockup, melainkan alat yang benar-benar berfungsi langsung di situs statis ini, dalam bahasa Inggris dan Indonesia."}
+        </p>
+
+        <div className="grid md:grid-cols-2 gap-5">
+          {[
+            {
+              name: "CopyForge",
+              sub: { en: "AI Copywriting Studio", id: "Studio Copywriting AI" },
+              desc: {
+                en: "Turns a one-line brief into headlines, taglines, ad copy, CTAs, and SEO meta — tuned to your audience and tone. Runs entirely in the browser.",
+                id: "Mengubah brief satu baris menjadi headline, tagline, ad copy, CTA, dan meta SEO — disesuaikan dengan audiens dan tone. Berjalan sepenuhnya di browser.",
+              },
+              icon: "bi-fire",
+              grad: "from-indigo-500 via-violet-500 to-fuchsia-500",
+              accent: "139,92,246",
+              accentText: isDark ? "196,181,253" : "124,58,237",
+              href: "/labs/copyforge",
+              liveLabel: { en: "Live Demo", id: "Demo Langsung" },
+              liveIcon: "bi-box-arrow-up-right",
+              toolHref: "/labs/copyforge/studio",
+              toolLabel: { en: "Open Studio", id: "Buka Studio" },
+              toolIcon: "bi-stars",
+              tech: ["Next.js", "React", "TypeScript", "Tailwind"],
+              featured: false,
+            },
+            {
+              name: "PixelHarvest",
+              sub: { en: "Website Image Scraper", id: "Scraper Gambar Web" },
+              desc: {
+                en: "Paste any public URL and it fetches the page, extracts every image, and lays them out in a filterable gallery — all client-side, no backend.",
+                id: "Tempel URL publik mana pun: ia mengambil halaman, mengekstrak setiap gambar, dan menatanya dalam galeri yang bisa difilter — sepenuhnya di sisi klien, tanpa backend.",
+              },
+              icon: "bi-images",
+              grad: "from-emerald-500 via-teal-500 to-cyan-500",
+              accent: "20,184,166",
+              accentText: isDark ? "94,234,212" : "13,148,136",
+              href: "/labs/pixelharvest",
+              liveLabel: { en: "Live Demo", id: "Demo Langsung" },
+              liveIcon: "bi-box-arrow-up-right",
+              toolHref: "/labs/pixelharvest/scraper",
+              toolLabel: { en: "Open Scraper", id: "Buka Scraper" },
+              toolIcon: "bi-download",
+              tech: ["Next.js", "DOMParser", "CORS Proxy", "TypeScript"],
+              featured: false,
+            },
+            {
+              name: "Jarvis Mode",
+              sub: { en: "Hand-Tracking Particles", id: "Partikel Pelacak Tangan" },
+              desc: {
+                en: "Raise one or both hands and finger gestures morph the particles between a dense core, a wide bloom, a directed beam, twin swirls, a vortex and electric arcs — pull your hands apart to zoom. On-device hand tracking; the camera is never shown.",
+                id: "Angkat satu atau dua tangan dan gestur jari mengubah partikel antara inti padat, mekar lebar, beam terarah, pusaran ganda, vortex, dan busur listrik — jauhkan kedua tangan untuk zoom. Pelacakan tangan di perangkat; kamera tidak pernah ditampilkan.",
+              },
+              icon: "bi-hand-index-thumb",
+              grad: "from-cyan-400 via-sky-500 to-indigo-500",
+              accent: "34,211,238",
+              accentText: isDark ? "165,243,252" : "14,116,144",
+              href: "/labs/jarvis",
+              liveLabel: { en: "Activate Jarvis", id: "Aktifkan Jarvis" },
+              liveIcon: "bi-camera-video",
+              toolHref: "",
+              toolLabel: { en: "", id: "" },
+              toolIcon: "",
+              tech: ["MediaPipe Hands", "Canvas 2D", "getUserMedia", "TypeScript"],
+              featured: true,
+            },
+          ].map((p) => (
+            <div
+              key={p.name}
+              className={`group relative ${th.contactCard} rounded-2xl p-6 sm:p-7 overflow-hidden transition-all duration-300 hover:-translate-y-1 ${p.featured ? "md:col-span-2" : ""}`}
+              style={{ borderColor: `rgba(${p.accent},${isDark ? 0.25 : 0.3})` }}
+            >
+              <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+                <div className="hud-sm-tl absolute w-5 h-5 top-3 left-3" style={{ borderColor: `rgba(${p.accent},0.5)` }} />
+                <div className="hud-sm-br absolute w-5 h-5 bottom-3 right-3" style={{ borderColor: `rgba(${p.accent},0.5)` }} />
+              </div>
+              <div
+                className="absolute top-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                style={{ background: `linear-gradient(90deg, transparent, rgba(${p.accent},0.6), transparent)` }}
+              />
+
+              <div className="relative flex items-center gap-3 mb-4">
+                <span className={`flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br ${p.grad} flex-shrink-0`} style={{ boxShadow: `0 10px 24px -8px rgba(${p.accent},0.6)` }}>
+                  <i className={`bi ${p.icon} text-white text-xl`} />
+                </span>
+                <div>
+                  <h3 className={`text-lg font-bold ${th.contactTitle}`}>{p.name}</h3>
+                  <p className="text-xs font-mono uppercase tracking-[0.12em]" style={{ color: `rgb(${p.accentText})` }}>{p.sub[lang]}</p>
+                </div>
+              </div>
+
+              <p className={`relative text-sm leading-relaxed mb-5 ${th.aboutText}`}>{p.desc[lang]}</p>
+
+              <div className="relative flex flex-wrap gap-2 mb-6">
+                {p.tech.map((tech) => (
+                  <span
+                    key={tech}
+                    className="text-[11px] font-mono px-2.5 py-1 rounded-md border"
+                    style={{ borderColor: `rgba(${p.accent},0.25)`, background: `rgba(${p.accent},0.08)`, color: `rgb(${p.accentText})` }}
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+
+              <div className="relative flex flex-wrap gap-3">
+                <a
+                  href={p.href}
+                  className={`inline-flex items-center gap-2.5 bg-gradient-to-r ${p.grad} text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 hover:scale-105 active:scale-95`}
+                  style={{ boxShadow: `0 10px 24px -10px rgba(${p.accent},0.6)` }}
+                >
+                  <i className={`bi ${p.liveIcon}`} />
+                  {p.liveLabel[lang]}
+                </a>
+                {p.toolHref && (
+                  <a
+                    href={p.toolHref}
+                    className={`inline-flex items-center gap-2.5 ${th.portfolioBtn} px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105 active:scale-95`}
+                  >
+                    <i className={`bi ${p.toolIcon}`} />
+                    {p.toolLabel[lang]}
+                  </a>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* ── CONTACT SECTION ──────────────────────────────────── */}
       <section id="contact" className="relative max-w-5xl mx-auto px-5 sm:px-8 lg:px-12 py-16 sm:py-20 lg:py-24" data-aos="fade-up">
         <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">

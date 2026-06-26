@@ -404,3 +404,23 @@ section, header, footer, nav, main {
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
 }
+
+/* ══════════════════════════════════════════════════════
+   SAAS DEMOS (/labs) — shared loading skeleton shimmer
+   Brand colors are applied inline per product; this stays neutral.
+   ══════════════════════════════════════════════════════ */
+.saas-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 25%,
+    rgba(255, 255, 255, 0.12) 37%,
+    rgba(255, 255, 255, 0.03) 63%
+  );
+  background-size: 400% 100%;
+  animation: saasShimmer 1.4s ease infinite;
+}
+
+@keyframes saasShimmer {
+  0%   { background-position: 100% 0; }
+  100% { background-position: 0 0; }
+}
